@@ -67,16 +67,23 @@ function insertUser(req,res){
     })
 }
 function findByLog(req,res){
-    let nCuenta=req.body.nCuenta
-    let pass=req.body.pass
+    let numCuenta=req.body.nCuenta
+    let password=req.body.pass
     console.log('POST /api/login')
     console.log(req.body)
     
-    User.findOne({nCuenta,pass},(err,users)=>{
-        if(err) return res.status(500).send({message:`error al realizar la peticion ${err}`})
-        if(!users) return res.status(404).send({message:`No existe el usuario`})
-        
-        res.status(200).send({users})
+    User.findOne({nCuenta:numCuenta,pass:password},(err,users)=>{
+        if(err){
+          return res.status(500).send({message:`error al realizar la peticion ${err}`})  
+        }
+        else{
+            if(users){
+                res.status(200).send({users})
+            }
+            else{
+                res.status(400).send({message:'no se encuentra ese usuario'})
+            }
+        }        
     })
 }
 
