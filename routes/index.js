@@ -24,6 +24,8 @@ api.delete('/user/:userid',userCtrl.deleteUser)
 api.post('/login',userCtrl.findByLog)
 //subimos el avatar del usuario
 api.post('/avatar/:userid',md_upload,userCtrl.uploadimg)
+//extraemos el avatar del usuario
+api.get('/avatar/:name',userCtrl.getFoto)
 
 //Metodos para la tabla de Publicaciones
 //find all

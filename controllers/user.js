@@ -3,6 +3,7 @@
 //importamis los modelos
 const User=require('../models/user')
 const fs=require('fs')
+const path=require('path')
 
 function getUser(req,res){
     let numCuenta=req.params.nCuenta
@@ -144,6 +145,19 @@ function uploadimg(req,res){
     }
 }
 
+function getFoto(req,res){
+    var name=req.params.name
+    var ruta='./uploads/avatar/'+name
+    
+    fs.exists(ruta,function(exists){
+        if(exists){
+            res.sendFile(path.resolve(ruta))
+        }else{
+            res.status(404).send({message:'No existe la img',ruta:ruta})
+        }
+    })
+}
+
 module.exports={
     getUser,
     getUsers,
@@ -151,5 +165,6 @@ module.exports={
     deleteUser,
     insertUser,
     findByLog,
-    uploadimg
+    uploadimg,
+    getFoto
 }
