@@ -2,10 +2,11 @@
 
 //importamis los modelos
 const User=require('../models/user')
+const fs=require('fs')
 
 function getUser(req,res){
-    let idUser=req.params.idUser
-    User.findById(idUser,(err,user)=>{
+    let numCuenta=req.params.nCuenta
+    User.find({nCuenta: numCuenta},(err,user)=>{
         if(err) return res.status(500).send({message:`error al realizar la peticion ${err}`})
         if(!user) return res.status(404).send({message:`El producto no existe`})
         res.status(200).send({user})
@@ -14,14 +15,14 @@ function getUser(req,res){
 
 function getUsers(req,res){
     User.find({},(err,users)=>{
-        if(err) return res.status(500).send({message:`error al realizar la peticion ${err}`})
-        if(!users) return res.status(404).send({message:`No existe el producto`})
+        if(err)  res.status(500).send({message:`error al realizar la peticion ${err}`})
+        if(!users) res.status(404).send({message:`No existe el producto`})
         res.status(200).send({users})
     })
 }
 
 function updateUser(req,res){
-    var idUser= req.params.idUSer
+    var idUser= req.params.userid
     var update=req.body
     User.findByIdAndUpdate(idUser,update,(req,userUpdated)=>{
         if(err) res.status(500).send({message:`Error al actualizar el usuario ${err}`})
@@ -29,8 +30,8 @@ function updateUser(req,res){
     })
 }
 function deleteUser(req,res){
-    var idUser=req.params.idUser
-    user.findById(idUser,(err,user)=>{
+    var idUser=req.params.userid
+    User.findById(idUser,(err,user)=>{
         if(err) res.status(500).send({menssage:`Error al borrar el usuario ${err}`})
         user.remove(err=>{
             if(err) res.status(500).send({message:`Error al borrar al usuario ${err}`})
@@ -52,20 +53,33 @@ function insertUser(req,res){
     user.pass=req.body.pass
     user.foto=req.body.foto
     
-    user.save((err,userStored)=>{
+    User.findOne({nCuenta:req.body.nCuenta},(err,usere)=>{
         if(err){
-            res.status(500).send({message:`Error al salvar en la BD: ${err}`})
-        } 
+            res.status(500).send({message:`Error al comprobar que existe el usuario: ${err}`})
+        }
         else{
-            if(!userStored){
-                res.status(404).send({message:`No se registro el usuario`})
+            if(!usere){
+                user.save((err,userStored)=>{
+                    if(err){
+                        res.status(500).send({message:`Error al salvar en la BD: ${err}`})
+                    } 
+                    else{
+                        if(!userStored){
+                            res.status(404).send({message:`No se registro el usuario`})
+                        }
+                        else{
+                            res.status(200).send({user:userStored})
+                        }
+                    }
+                })
             }
             else{
-                res.status(200).send({user:userStored})
+                res.status(200).send({message:`No se registro el usuario por que ya existe`})
             }
         }
     })
 }
+
 function findByLog(req,res){
     let numCuenta=req.body.nCuenta
     let password=req.body.pass
@@ -87,6 +101,48 @@ function findByLog(req,res){
     })
 }
 
+function uploadimg(req,res){
+    
+    if(req.files){
+        let file_path=req.files.imagen.path
+        let file_split=file_path.split('\\')
+        let file_name=file_split[2]
+        let ext_split=file_name.split('\.')
+        let file_ext=ext_split[1]
+        
+        if(file_ext=='png' || file_ext=='jpg' || file_ext=='jpeg'){
+            let idUser= req.params.userid
+            let update=req.body
+            User.findByIdAndUpdate(idUser,{foto:file_name},{new:true},(err,userUpdate)=>{
+                if(err){
+                    res.status(500).send({message:`Error al actualizar foto de usuario ${err}`})
+                }
+                else{
+                    if(!userUpdate){
+                        res.status(400).send({message:'No se pudo actiualizar'})
+                    }
+                    else{
+                        res.status(200).send({user:userUpdate, imagen:file_name})
+                    }
+                }
+            })
+        }
+        else{
+            fs.unlink(file_path,(err)=>{
+                if(err){
+                    res.status(200).send({message:'Extension no valida y archivo no borrado'})
+                }
+                else{
+                    res.status(200).send({message:'Extension no valida'})
+                }
+            })
+            res.status(200).send({message:'Extension no valida'})
+        }
+    }
+    else{
+        res.status(200).send({message:'no selecciono IMG'})
+    }
+}
 
 module.exports={
     getUser,
@@ -94,5 +150,6 @@ module.exports={
     updateUser,
     deleteUser,
     insertUser,
-    findByLog
+    findByLog,
+    uploadimg
 }
