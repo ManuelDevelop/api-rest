@@ -6,6 +6,7 @@ const api=require('./routes')
 const app= express();
 
 const userCtrl=require('./controllers/user')
+const publicacionCtrl=require('./controllers/publicacion')
 //para el json y bson
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
@@ -19,6 +20,7 @@ app.use((req,res,next)=>{
     res.header('Allow','GET,POST,OPTIONS,PUT,DELETE')
     next();
 })
+//le agregamos el prefijo de api a las rutas
 app.use('/api',api)
 //exportamos el modulo
 module.exports=app

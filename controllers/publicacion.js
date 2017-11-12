@@ -1,7 +1,10 @@
 'use strict'
 
 //importamis los modelos
-const User=require('../models/publicacion')
+const Publicacion=require('../models/publicacion')
+const User=require('../models/user')
+const fs=require('fs')
+const path=require('path')
 
 function getPublicacion(req,res){
     let idPublicacion=req.params.idPublicacion
@@ -41,11 +44,10 @@ function deletePublicacion(req,res){
 function insertPublicacion(req,res){
     console.log('POST /api/publicacion')
     console.log(req.body)
-    let userid=localStorage.getItem('identidadICO')
     let publicacion=new Publicacion()
     publicacion.ptexto=req.body.ptexto
     publicacion.pfecha=req.body.pfecha
-    publicacion.user_id=userid._id;
+    publicacion.user_id=req.body.user_id
     
     publicacion.save((err,PublicacionStored)=>{
         if(err){

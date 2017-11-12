@@ -103,6 +103,8 @@ function findByLog(req,res){
 }
 
 function uploadimg(req,res){
+    console.log('POST /api/avatar/iduser')
+    console.log(req.body)
     
     if(req.files){
         let file_path=req.files.imagen.path
