@@ -7,11 +7,17 @@ const fs=require('fs')
 const path=require('path')
 
 function getPublicacion(req,res){
-    let idPublicacion=req.params.idPublicacion
-    Publicacion.findById(idPublicacion,(err,publicacion)=>{
-        if(err) return res.status(500).send({message:`error al realizar la peticion ${err}`})
-        if(!publicacion) return res.status(404).send({message:`La PubPublicacion no existe`})
-        res.status(200).send({publicacion})
+    let pid=req.params.pid
+    Publicacion.findById(pid,(err,publicacion)=>{
+        if(err){
+            return res.status(500).send({message:`error al realizar la peticion ${err}`})
+        } 
+        else if(!publicacion){
+            return res.status(404).send({message:`La PubPublicacion no existe`})
+        }
+        else{
+            res.status(200).send({publicacion})
+        } 
     })
 }
 
@@ -24,21 +30,30 @@ function getPublicaciones(req,res){
 }
 
 function updatePublicacion(req,res){
-    var idPublicacion= req.params.idPublicacion
-    var update=req.body
-    Publicacion.findByIdAndUpdate(idPublicacion,update,(req,publicacionUpdated)=>{
-        if(err) return res.status(500).send({message:`Error al actualizar la publicaion ${err}`})
-        res.status(200).send({user:userUpdated})
+    let pid= req.params.pid
+    let update=req.body
+    Publicacion.findByIdAndUpdate(pid,update,(err,pupdate)=>{
+        if(err) res.status(500).send({message:`Error al actualizar la publicaion ${err}`})
+        if(!pupdate) res.status(404).send({menssage:'No encontrado'})
+        res.status(200).send({publicaion:pupdate})
     })
 }
 function deletePublicacion(req,res){
-    var idPublicacion=req.params.idPublicacion
-    publicacion.findById(idPublicacion,(err,publicacion)=>{
-        if(err) res.status(500).send({menssage:`Error al borrar la publicacion ${err}`})
-        Publicacion.remove(err=>{
-            if(err) res.status(500).send({message:`Error al borrar la publicacion ${err}`})
-            res.status(200).send({message:`La publicaion fue eliminada`})
+    let pid=req.params.pid
+    Publicacion.findById(pid,(err,publicacion)=>{
+        if(err){
+            res.status(500).send({menssage:`Error al borrar la publicacion ${err}`})
+        } 
+        else{
+            publicacion.remove(err=>{
+                if(err){
+                    res.status(500).send({message:`Error al borrar la publicacion ${err}`})
+                } 
+                else{
+                    res.status(200).send({message:`La publicaion fue eliminada`})
+                }
         })
+        }
     })
 }
 function insertPublicacion(req,res){

@@ -4,6 +4,7 @@ const userCtrl=require('../controllers/user')
 const publicacionCtrl=require('../controllers/publicacion')
 const fotoCtrl=require('../controllers/foto')
 const comentarioCtrl=require('../controllers/comentario')
+const amigoCtrl=require('../controllers/amigo')
 const multipart=require('connect-multiparty')
 const md_upload=multipart({uploadDir:'./uploads/avatar'})
 const api= express.Router()
@@ -31,38 +32,50 @@ api.get('/avatar/:name',userCtrl.getFoto)
 //find all
 api.get('/publicacion',publicacionCtrl.getPublicaciones)
 //find by nCuenta 
-api.get('/publicacion/:publicaion_id',publicacionCtrl.getPublicacion)
+api.get('/publicacion/:pid',publicacionCtrl.getPublicacion)
 //insert un nuevo usuario
 api.post('/publicacion',publicacionCtrl.insertPublicacion)
 //actualizar un usuario
-api.put('/publicacion/:publicacion_id',publicacionCtrl.updatePublicacion)
+api.put('/publicacion/:pid',publicacionCtrl.updatePublicacion)
 //eliminar un usuario
-api.delete('/publicacion',publicacionCtrl.deletePublicacion)
+api.delete('/publicacion/:pid',publicacionCtrl.deletePublicacion)
 
 //Metodos para la tabla de Comentario
 //find all
 api.get('/comentario',comentarioCtrl.getComentario)
 //find by nCuenta 
-api.get('/comentario/:comentario_id',comentarioCtrl.getComentarios)
+api.get('/comentario/:cid',comentarioCtrl.getComentarios)
 //insert un nuevo usuario
 api.post('/comentario',comentarioCtrl.insertComentario)
 //actualizar un usuario
-api.put('/comentario/:comentario_id',comentarioCtrl.updateComentario)
+api.put('/comentario/:cid',comentarioCtrl.updateComentario)
 //eliminar un usuario
-api.delete('/comentario',comentarioCtrl.deleteComentario)
+api.delete('/comentario/:cid',comentarioCtrl.deleteComentario)
 
 
 //Metodos para la tabla de Foto
 //find all
-api.get('/foto',fotoCtrl.getFoto)
+api.get('/foto',fotoCtrl.getFotos)
 //find by nCuenta 
-api.get('/foto/:foto_id',fotoCtrl.getFotos)
+api.get('/foto/:fid',fotoCtrl.getFoto)
 //insert un nuevo usuario
 api.post('/foto',fotoCtrl.insertFoto)
 //actualizar un usuario
-api.put('/foto/:foto_id',fotoCtrl.updateFoto)
+api.put('/foto/:fid',fotoCtrl.updateFoto)
 //eliminar un usuario
-api.delete('/foto',fotoCtrl.deleteFoto)
+api.delete('/foto/:fid',fotoCtrl.deleteFoto)
+
+//Metodos para la tabla de Amigo (relaciones)
+//find all
+api.get('/amigo',amigoCtrl.getAmigos)
+//find by nCuenta 
+api.get('/amigo/:aid',amigoCtrl.getAmigo)
+//insert un nuevo usuario
+api.post('/amigo',amigoCtrl.insertAmigo)
+//actualizar un usuario
+api.put('/amigo/:aid',amigoCtrl.updateAmigo)
+//eliminar un usuario
+api.delete('/amigo/:aid',amigoCtrl.deleteAmigo)
 
 
 

@@ -25,7 +25,7 @@ function getUsers(req,res){
 function updateUser(req,res){
     var idUser= req.params.userid
     var update=req.body
-    User.findByIdAndUpdate(idUser,update,(req,userUpdated)=>{
+    User.findByIdAndUpdate(idUser,update,(err,userUpdated)=>{
         if(err) res.status(500).send({message:`Error al actualizar el usuario ${err}`})
         res.status(200).send({user:userUpdated})
     })

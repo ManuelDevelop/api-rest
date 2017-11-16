@@ -4,8 +4,8 @@
 const User=require('../models/comentario')
 
 function getComentario(req,res){
-    let idComentario=req.params.idComentario
-    Comentario.findById(idComentario,(err,comentario)=>{
+    let cid=req.params.cid
+    Comentario.findById(cid,(err,comentario)=>{
         if(err) return res.status(500).send({message:`error al realizar la peticion ${err}`})
         if(!comentario) return res.status(404).send({message:`El comentario no existe`})
         res.status(200).send({comentario})
@@ -21,16 +21,16 @@ function getComentarios(req,res){
 }
 
 function updateComentario(req,res){
-    var idComentario= req.params.idComentario
-    var update=req.body
-    Comentario.findByIdAndUpdate(idComentario,update,(req,ComentarioUpdated)=>{
+    let cid= req.params.cid
+    let update=req.body
+    Comentario.findByIdAndUpdate(cid,update,(err,ComentarioUpdated)=>{
         if(err) res.status(500).send({message:`Error al actualizar el Comentario ${err}`})
         res.status(200).send({comentario:ComentarioUpdated})
     })
 }
 function deleteComentario(req,res){
-    var idComentario=req.params.idComentario
-    Comentario.findById(idComentario,(err,comentario)=>{
+    let cid=req.params.cid
+    Comentario.findById(cid,(err,comentario)=>{
         if(err) res.status(500).send({menssage:`Error al borrar el Comentario ${err}`})
         Comentario.remove(err=>{
             if(err) res.status(500).send({message:`Error al borrar el Comentario ${err}`})
@@ -42,26 +42,22 @@ function insertComentario(req,res){
     console.log('POST /api/user')
     console.log(req.body)
     
-    let user=new User()
-    user.name=req.body.name
-    user.paterno=req.body.paterno
-    user.materno=req.body.materno
-    user.nCuenta=req.body.nCuenta
-    user.email=req.body.email
-    user.celular=req.body.celular
-    user.pass=req.body.pass
-    user.foto=req.body.foto
-    
-    user.save((err,userStored)=>{
+    let comentario=new Comentario()
+    comentario.ctexto=req.body.ctexto
+    comentario.cfecha=req.body.cfecha
+    comentario.user_id=req.body.user_id
+    comentario.publicaion_id=req.body.publicaion_id
+
+    comentario.save((err,comentarioStored)=>{
         if(err){
             res.status(500).send({message:`Error al salvar en la BD: ${err}`})
         } 
         else{
             if(!userStored){
-                res.status(404).send({message:`No se registro el usuario`})
+                res.status(404).send({message:`No se registro el comentario`})
             }
             else{
-                res.status(200).send({user:userStored})
+                res.status(200).send({comentario:comentarioStored})
             }
         }
     })
