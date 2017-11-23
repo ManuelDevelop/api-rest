@@ -23,9 +23,19 @@ function getPublicacion(req,res){
 
 function getPublicaciones(req,res){
     Publicacion.find({},(err,publicaciones)=>{
-        if(err) return res.status(500).send({message:`error al realizar la peticion ${err}`})
-        if(!publicaciones) return res.status(404).send({message:`No hay publicaciones`})
-        res.status(200).send({publicaciones})
+        if(err){
+            return res.status(500).send({message:`error al realizar la peticion ${err}`})
+        } 
+        else{
+            if(!publicaciones){
+                return res.status(404).send({message:`No hay publicaciones`})
+            }
+            else{
+                User.populate(publicaciones,{path:"user_id"},function(err,publicaciones){
+                    res.status(200).send({publicaciones})
+                })
+            } 
+        }
     })
 }
 

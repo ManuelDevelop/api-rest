@@ -42,15 +42,17 @@ api.delete('/publicacion/:pid',publicacionCtrl.deletePublicacion)
 
 //Metodos para la tabla de Comentario
 //find all
-api.get('/comentario',comentarioCtrl.getComentario)
+api.get('/comentario',comentarioCtrl.getComentarios)
 //find by nCuenta 
-api.get('/comentario/:cid',comentarioCtrl.getComentarios)
+api.get('/comentario/:cid',comentarioCtrl.getComentario)
 //insert un nuevo usuario
 api.post('/comentario',comentarioCtrl.insertComentario)
 //actualizar un usuario
 api.put('/comentario/:cid',comentarioCtrl.updateComentario)
 //eliminar un usuario
 api.delete('/comentario/:cid',comentarioCtrl.deleteComentario)
+//buscar los cometadios de una publicacion
+api.post('/comentarios',comentarioCtrl.getComentarioDePublicacion)
 
 
 //Metodos para la tabla de Foto
